@@ -1,0 +1,14 @@
+.title {
+  font-size: 60px;
+  width: 100%;
+  text-align: center;
+  margin-top: 13%;
+}
+
+.title__text--thin {
+  font-weight: 300;
+}
+
+.title__text--bold {
+  font-weight: 600;
+}
