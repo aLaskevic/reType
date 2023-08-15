@@ -33,28 +33,28 @@ function TextSection() {
 
   const handleGlobalClick = (event: KeyboardEvent) => {
     //Shift shouldn't trigger this event
-    if (event.key === "Shift") return;
+    if (event.key !== "Shift") {
+      console.log(data);
 
-    console.log(data);
+      console.log(
+        myUnmarkedRef.current.charAt(0),
+        event.key,
+        myUnmarkedRef.current.charAt(myIndexRef.current) === event.key,
+        myIndexRef.current
+      );
 
-    console.log(
-      myUnmarkedRef.current.charAt(myIndexRef.current),
-      event.key,
-      myUnmarkedRef.current.charAt(myIndexRef.current) === event.key,
-      myIndexRef.current
-    );
+      if (myUnmarkedRef.current.charAt(0) === event.key) {
+        const newMarked = myMarkedRef.current + event.key;
+        setMarkedText(newMarked);
 
-    if (myUnmarkedRef.current.charAt(myIndexRef.current) === event.key) {
-      const newMarked = myMarkedRef.current + event.key;
-      setMarkedText(newMarked);
+        const newIndex = myIndexRef.current + 1;
+        setIndex(newIndex);
 
-      const newIndex = myIndexRef.current + 1;
-      setIndex(newIndex);
+        const newUnmarked = myUnmarkedRef.current.slice(1);
 
-      const newUnmarked = myUnmarkedRef.current.slice(myIndexRef.current);
-
-      console.log(newUnmarked);
-      setUnmarkedText(newUnmarked);
+        console.log(newUnmarked);
+        setUnmarkedText(newUnmarked);
+      }
     }
   };
 
