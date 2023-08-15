@@ -5,26 +5,58 @@ import "./textsection.css";
 function TextSection() {
   const [data, setData] = useState([[]]);
   const [loading, setLoading] = useState(true);
-  const [index, setIndex] = useState(0);
-  const [page, setPage] = useState(0);
-  const [markedText, setMarkedText] = useState("");
-  const [unmarkedText, setUnmarkedText] = useState("");
+  const [index, _setIndex] = useState(0);
+  //   const [page, setPage] = useState(0);
+  const [markedText, _setMarkedText] = useState("");
+  const [unmarkedText, _setUnmarkedText] = useState("");
 
-  const markedWordsRef = useRef(null);
-  const unmarkedWordsRef = useRef(null);
+  const myMarkedRef = useRef(markedText);
+
+  function setMarkedText(marked: string) {
+    myMarkedRef.current = marked;
+    _setMarkedText(marked);
+  }
+
+  const myUnmarkedRef = useRef(unmarkedText);
+
+  function setUnmarkedText(unmarked: string) {
+    myUnmarkedRef.current = unmarked;
+    _setUnmarkedText(unmarked);
+  }
+
+  const myIndexRef = useRef(index);
+
+  function setIndex(index: number) {
+    myIndexRef.current = index;
+    _setIndex(index);
+  }
 
   const handleGlobalClick = (event: KeyboardEvent) => {
     //Shift shouldn't trigger this event
     if (event.key === "Shift") return;
 
-    setIndex(index + 1);
-  };
+    console.log(data);
 
-  useEffect(() => {
-    setMarkedText(
-      (prevMarkedText) => prevMarkedText + unmarkedText.charAt(index)
+    console.log(
+      myUnmarkedRef.current.charAt(myIndexRef.current),
+      event.key,
+      myUnmarkedRef.current.charAt(myIndexRef.current) === event.key,
+      myIndexRef.current
     );
-  }, [index]);
+
+    if (myUnmarkedRef.current.charAt(myIndexRef.current) === event.key) {
+      const newMarked = myMarkedRef.current + event.key;
+      setMarkedText(newMarked);
+
+      const newIndex = myIndexRef.current + 1;
+      setIndex(newIndex);
+
+      const newUnmarked = myUnmarkedRef.current.slice(myIndexRef.current);
+
+      console.log(newUnmarked);
+      setUnmarkedText(newUnmarked);
+    }
+  };
 
   useEffect(() => {
     const fetchDataAsync = async () => {
@@ -61,12 +93,8 @@ function TextSection() {
         <div> Am Laden</div>
       ) : (
         <div className="textsection">
-          <span ref={markedWordsRef} className="textsection__text--marked">
-            {markedText}
-          </span>
-          <span ref={unmarkedWordsRef} className="textsection__text--unmarked">
-            {unmarkedText}
-          </span>
+          <span className="textsection__text--marked">{markedText}</span>
+          <span className="textsection__text--unmarked">{unmarkedText}</span>
         </div>
       )}
     </>
