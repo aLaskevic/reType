@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { fetchData } from "../../api/apiService";
+import sound from "../../assets/keyboardPress.mp3";
 import "./textsection.css";
 
 function TextSection() {
@@ -9,6 +10,7 @@ function TextSection() {
   //   const [page, setPage] = useState(0);
   const [markedText, _setMarkedText] = useState("");
   const [unmarkedText, _setUnmarkedText] = useState("");
+  const [mistakes, _setMistakes] = useState(0);
 
   const myMarkedRef = useRef(markedText);
 
@@ -31,30 +33,39 @@ function TextSection() {
     _setIndex(index);
   }
 
+  const myMistakesRef = useRef(mistakes);
+
+  function setMistakes(mistakes: number) {
+    myMistakesRef.current = mistakes;
+    _setMistakes(mistakes);
+  }
+
   const handleGlobalClick = (event: KeyboardEvent) => {
     //Shift shouldn't trigger this event
-    if (event.key !== "Shift") {
-      console.log(data);
+    if (event.key == "Shift") return;
 
-      console.log(
-        myUnmarkedRef.current.charAt(0),
-        event.key,
-        myUnmarkedRef.current.charAt(myIndexRef.current) === event.key,
-        myIndexRef.current
-      );
+    console.log(
+      myUnmarkedRef.current.charAt(0),
+      event.key,
+      myUnmarkedRef.current.charAt(myIndexRef.current) === event.key,
+      myIndexRef.current
+    );
 
-      if (myUnmarkedRef.current.charAt(0) === event.key) {
-        const newMarked = myMarkedRef.current + event.key;
-        setMarkedText(newMarked);
+    if (myUnmarkedRef.current.charAt(0) === event.key) {
+      var audio = new Audio(sound);
+      audio.volume = 0.5;
+      audio.play();
 
-        const newIndex = myIndexRef.current + 1;
-        setIndex(newIndex);
+      const newMarked = myMarkedRef.current + event.key;
+      setMarkedText(newMarked);
 
-        const newUnmarked = myUnmarkedRef.current.slice(1);
+      const newIndex = myIndexRef.current + 1;
+      setIndex(newIndex);
 
-        console.log(newUnmarked);
-        setUnmarkedText(newUnmarked);
-      }
+      const newUnmarked = myUnmarkedRef.current.slice(1);
+
+      console.log(newUnmarked);
+      setUnmarkedText(newUnmarked);
     }
   };
 
@@ -64,7 +75,7 @@ function TextSection() {
         const response = await fetchData("/word?number=500&lang=de");
 
         const subListData = [];
-        const subListSize = 25;
+        const subListSize = 10;
         for (let i = 0; i < response.length; i += subListSize) {
           const sublist = response.slice(i, i + subListSize);
           subListData.push(sublist);

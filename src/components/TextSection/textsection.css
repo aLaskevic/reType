@@ -1,4 +1,5 @@
 .textsection {
+  user-select: none;
   font-weight: 600;
   font-size: 25px;
   width: 80%;
@@ -14,4 +15,5 @@
 
 .textsection__text--marked {
   color: #000;
+  text-decoration: underline;
 }
